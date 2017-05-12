@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <context-param>
+    <param-name>consumerKey</param-name>
+    <param-value>4yg1Ys1OPMFl9hJUGsu3pZuOC</param-value>
+  </context-param>
+  <context-param>
+    <param-name>consumerSecret</param-name>
+    <param-value>1AOhwqlankGL0ERfqof9qAvnA9aGIL2U2YJfTR7BdAVgUWZ1ri</param-value>
+  </context-param>
   <servlet>
-    <servlet-name>HelloWorld</servlet-name>
-    <servlet-class>aiss.HelloWorldServlet</servlet-class>
+    <description></description>
+    <display-name>TwitterLogInServlet</display-name>
+    <servlet-name>TwitterLogInServlet</servlet-name>
+    <servlet-class>aiss.controller.TwitterLogInServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HelloWorld</servlet-name>
-    <url-pattern>/helloworld</url-pattern>
+    <servlet-name>TwitterLogInServlet</servlet-name>
+    <url-pattern>/TwitterLogIn</url-pattern>
   </servlet-mapping>
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>TwitterCallbackServlet</display-name>
+    <servlet-name>TwitterCallbackServlet</servlet-name>
+    <servlet-class>aiss.controller.TwitterCallbackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TwitterCallbackServlet</servlet-name>
+    <url-pattern>/TwitterCallback</url-pattern>
+  </servlet-mapping>
 </web-app>
