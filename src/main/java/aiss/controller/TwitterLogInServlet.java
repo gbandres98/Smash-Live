@@ -27,6 +27,7 @@ public class TwitterLogInServlet extends HttpServlet {
         configurationBuilder.setOAuthConsumerKey("5H9LPdteIlWG7ER6KHf0lnfcl");
         configurationBuilder.setOAuthConsumerSecret("lVSV6FIOYiaBfNumOfJDmVhncU2ocuEgHkb8MVGza3g9DzUzge");
         configurationBuilder.setUseSSL(true);
+        //configurationBuilder.setOAuthAuthenticationURL("https://api.twitter.com/oauth/authenticate");
         Configuration configuration = configurationBuilder.build();
     	Twitter twitter = new TwitterFactory(configuration).getInstance();
         request.getSession().setAttribute("twitter", twitter);
