@@ -84,8 +84,10 @@
 							</tag:loggedin>
 						</p>
 						<p>
-							<img src="img/connect_twitch.png" width="220" height="40"><img>
-						</p>
+							<a  href="#"><img
+								src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png"
+								class="twitch-connect"/></a>
+
 					</div>
 				</div>
 				<br> <br>

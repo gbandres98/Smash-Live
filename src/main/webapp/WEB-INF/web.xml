@@ -31,4 +31,24 @@
     <servlet-name>TwitterCallbackServlet</servlet-name>
     <url-pattern>/TwitterCallback</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>TwitchLogInServlet</display-name>
+    <servlet-name>TwitchLogInServlet</servlet-name>
+    <servlet-class>aiss.controller.TwitchLogInServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TwitchLogInServlet</servlet-name>
+    <url-pattern>/TwitchLogIn</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>TwitchCallbackServlet</display-name>
+    <servlet-name>TwitchCallbackServlet</servlet-name>
+    <servlet-class>aiss.controller.TwitchCallbackServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TwitchCallbackServlet</servlet-name>
+    <url-pattern>/TwitchCallback</url-pattern>
+  </servlet-mapping>
 </web-app>
