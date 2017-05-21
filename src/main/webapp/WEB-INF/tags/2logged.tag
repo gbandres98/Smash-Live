@@ -1,0 +1,1 @@
+<%if(null != session.getAttribute("twitter") && null != session.getAttribute("twitch")){%><jsp:doBody/><%}%>

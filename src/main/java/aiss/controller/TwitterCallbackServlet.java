@@ -2,15 +2,13 @@ package aiss.controller;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 import twitter4j.auth.RequestToken;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import aiss.model.User;
-
 import java.io.IOException;
 
 public class TwitterCallbackServlet extends HttpServlet {
@@ -26,6 +24,12 @@ public class TwitterCallbackServlet extends HttpServlet {
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
+        try {
+			User user = twitter.showUser(twitter.getId());
+			request.getSession().setAttribute("twitterImg", user.getBiggerProfileImageURL());
+		} catch (IllegalStateException | TwitterException e) {
+			e.printStackTrace();
+		}
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

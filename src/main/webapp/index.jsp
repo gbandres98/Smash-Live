@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@taglib prefix="tag" tagdir="/WEB-INF/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -53,7 +54,7 @@
 
 				<div class="mastfoot">
 					<div class="inner">
-						<p>AISS 2016/17 - Guillermo BandrÃ©s y Pablo Romero.</p>
+						<p>AISS 2016/17 - Guillermo Bandrés y Pablo Romero.</p>
 					</div>
 				</div>
 
@@ -61,16 +62,30 @@
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-8" style="background-color:;">
-						<img src="img/placeholder600x300.png" height=500px; width=1000px;><br>
-						<br> <br>
+						<br> <br> <img src="img/placeholder600x300.png"
+							height=300px; width=600px;>
 					</div>
 					<div class="col-md-4 text-left" style="background-color:;">
 						<br> <br>
-						<form>
-							Smash.gg tournament URL:<br> <input type="text"
-								style="color: black" name="smashggURL" size="60" required><br>
-							<br> Challonge API Key:<br> <input type="text"
-								style="color: black" name="challongeKey" size="40" required>
+						<form method="get" action="./GoApp">
+							<br>
+							<h2>Summoner name:</h2>
+							<input type="text" style="color: black" name="summ" size="40"
+								required><br> <br>
+							<h2>Region:</h2>
+							<select class="form-control" name="reg" id="sel1">
+								<option value="EUW1">EUW</option>
+								<option value="EUN1">EUNE</option>
+								<option value="BR1">BR</option>
+								<option value="JP1">JP</option>
+								<option value="KR">KR</option>
+								<option value="LA1">LAN</option>
+								<option value="LA2">LAS</option>
+								<option value="NA1">NA</option>
+								<option value="0C1">OCE</option>
+								<option value="TR1">TR</option>
+								<option value="RU">RU</option>
+							</select> <input type="submit" id="submit-form" class="hidden" />
 						</form>
 						<br>
 						<p>
@@ -79,15 +94,33 @@
 									src="./img/Sign-in-with-Twitter-darker.png" /></a>
 							</tag:notloggedin>
 							<tag:loggedin>
-								<h1>Welcome ${twitter.screenName} (${twitter.id})</h1>
-								<a href="./logout">logout</a>
+
+
+								<h1>
+									<img src='<c:catch>${twitterImg}</c:catch>' height=80px;
+										width=80px; style="margin-right: 15px;">Twitter:
+									@${twitter.screenName}
+								</h1>
+								<a style="font-size: 22px;" href="./TwitterLogOut">Log Out</a>
+
 							</tag:loggedin>
 						</p>
 						<p>
-							<a  href="#"><img
-								src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png"
-								class="twitch-connect"/></a>
+							<tag:twnotloggedin>
+								<a href="/TwitchLogIn"><img
+									src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png"
+									class="twitch-connect" /></a>
+							</tag:twnotloggedin>
+							<tag:twloggedin>
 
+
+								<h1>
+									<img src='<c:catch>${twitch.canal.logo}</c:catch>' height=80px;
+										width=80px; style="margin-right: 15px;">Twitch:
+									${twitch.canal.displayName}
+								</h1>
+								<a style="font-size: 22px;" href="./TwitchLogOut">Log Out</a>
+							</tag:twloggedin>
 					</div>
 				</div>
 				<br> <br>
@@ -97,7 +130,17 @@
 					</div>
 					<div class="col-md-2">
 						<p>
-							<a href="app.jsp" class="btn btn-lg btn-default">Go Live!</a>
+							<tag:2logged>							
+								<label for="submit-form"><a style="margin-top:-150px;"
+									class="btn btn-lg btn-default">Go Live!</a></label>
+									<tag:summerror>
+							<p>Oops, we couldn't find that summoner. Check that name and region are correct</p>
+							</tag:summerror>
+							</tag:2logged>
+						<tag:2notlogged>
+								<a class="btn btn-lg btn-default disabled">Log in to Twitter
+									and Twitch first</a>
+							</tag:2notlogged>
 						</p>
 					</div>
 					<div class="col-md-5" style="background-color:;">

@@ -27,7 +27,8 @@ public class TwitterLogInServlet extends HttpServlet {
         configurationBuilder.setOAuthConsumerKey("5H9LPdteIlWG7ER6KHf0lnfcl");
         configurationBuilder.setOAuthConsumerSecret("lVSV6FIOYiaBfNumOfJDmVhncU2ocuEgHkb8MVGza3g9DzUzge");
         configurationBuilder.setUseSSL(true);
-        //configurationBuilder.setOAuthAuthenticationURL("https://api.twitter.com/oauth/authenticate");
+//        configurationBuilder.setOAuthAuthenticationURL("https://api.twitter.com/oauth/authenticate");
+//        configurationBuilder.setOAuthAuthorizationURL("https://api.twitter.com/oauth/authenticate");
         Configuration configuration = configurationBuilder.build();
     	Twitter twitter = new TwitterFactory(configuration).getInstance();
         request.getSession().setAttribute("twitter", twitter);
@@ -37,8 +38,9 @@ public class TwitterLogInServlet extends HttpServlet {
             callbackURL.replace(index, callbackURL.length(), "").append("/TwitterCallback");
 
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
+            ;
             request.getSession().setAttribute("requestToken", requestToken);
-            response.sendRedirect(requestToken.getAuthenticationURL());
+            response.sendRedirect("https://api.twitter.com/oauth/authenticate?oauth_token="+requestToken.getToken());
 
         } catch (TwitterException e) {
             throw new ServletException(e);

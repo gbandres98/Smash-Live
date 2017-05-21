@@ -10,7 +10,8 @@
 <link rel="icon" href="../../favicon.ico">
 
 <title>Smash Live - App</title>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <!-- Bootstrap core CSS -->
 <link href="/css/bootstrap.min.css" rel="stylesheet">
 
@@ -25,9 +26,64 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+<script>
+	window.setInterval(function() {
+		$.get("gameUpdate", function(status) {
+			if (status == "newgame" || status == "samegame") {
+				document.getElementById('summInfo').style.display = "none";
+				document.getElementById('gameInfo').style.display = "inline";
+			} else if (status == "endgame" || status == "nogame") {
+				document.getElementById('gameInfo').style.display = "none";
+				document.getElementById('summInfo').style.display = "inline";
+				 document.getElementById("tweetResult").innerHTML ="";
+				 document.getElementById("twitchResult").innerHTML ="";
+			}
+			if (status == "newgame"){
+				if(document.getElementById('checkTweet').checked){
+					postTweet();
+				}if(document.getElementById('checkTwitch').checked){
+					postTwitch();
+				}
+			}
+		})
+
+	}, 5000);
+</script>
+<script>
+function postTweet() {
+	var t = document.getElementById("twitterPost").innerHTML;
+	  if (window.XMLHttpRequest) {
+	   xmlhttp = new XMLHttpRequest();
+	  } else {
+	   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  var url = "/Tweet";
+	  xmlhttp.open("POST", url, true);
+	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	  xmlhttp.send("tweet="+t);
+	  var respo= xmlhttp.responseText;
+	  document.getElementById("tweetResult").innerHTML = "Tweeted!";
+	 }
+	 
+function postTwitch() {
+	var t = document.getElementById("twitchPost").innerHTML;
+	  if (window.XMLHttpRequest) {
+	   xmlhttp = new XMLHttpRequest();
+	  } else {
+	   xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	  }
+	  var url = "/TwitchPost";
+	  xmlhttp.open("POST", url, true);
+	  xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	  xmlhttp.send("title="+t);
+	  var respo= xmlhttp.responseText;
+	  document.getElementById("twitchResult").innerHTML = "Title changed!";
+	 }
+</script>
+	
 </head>
 
-<body style="margin-left: 20px;">
+<body style="margin-left: 20px;background-color:Thistle;">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container-fluid">
@@ -43,9 +99,9 @@
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="index.html">Home</a></li>
-					<li><a href="faq.html">FAQ</a></li>
-					<li><a href="index.html">Log out</a></li>
+					<li><a href="index.jsp">Home</a></li>
+					<li><a href="faq.jsp" target="faq">FAQ</a></li>
+					<li><a href="/LogOut">Log out</a></li>
 				</ul>
 			</div>
 		</div>
@@ -53,114 +109,98 @@
 	<div class="container-fluid">
 
 		<div class="row row-eq-height">
-			<div class="col-md-4" style="background-color: lavender">
-				<br>
-				<h2>Tournament Bracket:</h2>
-				<form>
-					<div class="form-group">
-						<select class="form-control" id="bracket">
-							<option>Example Tournament - Top 32</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-							<option>5</option>
-						</select>
-					</div>
-				</form>
-				<div class="row">
-					<div class="col-md-12" style="background-color: IndianRed">
-						<h2>Challonge URL:</h2>
-						<form>
-							<input class="form-control" type="url" id="challongeURL"
-								value="challonge.com/yourTournament"></input>
-						</form>
-						<br> <br> <br>
-					</div>
-				</div>
+			<div id="summInfo" class="col-md-4"
+				>
+				<h1>
+					Summoner: <img style="vertical-align: bottom; margin-left: 20px;"
+						height=80px; width=80px;
+						src=<c:out value="http://ddragon.leagueoflegends.com/cdn/7.10.1/img/profileicon/${summoner.profileIconId}.png"/>>
+					${summoner.name}
+				</h1>
+				<h3>Not in a game...</h3>
+
+
+
 			</div>
-			<div class="col-md-4" style="background-color: lavenderblush">
+			<div id="gameInfo" class="col-md-4"
+				style="display: none;">
+				<h1>
+					Summoner: <img style="vertical-align: bottom; margin-left: 20px;"
+						height=80px; width=80px;
+						src=<c:out value="http://ddragon.leagueoflegends.com/cdn/7.10.1/img/profileicon/${summoner.profileIconId}.png"/>>
+					${summoner.name}
+				</h1>
+				<h3>
+					Now playing:
+					<c:choose>
+						<c:when test="${game.gameQueueConfigId == 420}">Ranked Solo, 5v5</c:when>
+						<c:when test="${game.gameQueueConfigId == 0}">Custom</c:when>
+						<c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when>
+						<c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when>
+						<c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when>
+						<c:otherwise>Ranked Solo</c:otherwise>
+					</c:choose>
+					<script>
+						var timerVar = setInterval(countTimer, 1000);
+						var totalSeconds = ${game.gameLength};
+						function countTimer() {
+							++totalSeconds;
+							var hour = Math.floor(totalSeconds / 3600);
+							var minute = Math
+									.floor((totalSeconds - hour * 3600) / 60);
+							var seconds = totalSeconds
+									- (hour * 3600 + minute * 60);
+
+							document.getElementById("timer").innerHTML = "<strong>"
+									+ minute + ":" + seconds + "</strong>";
+						}
+					</script>
+					<a style="margin-left: 20px;" id="timer"></a>
+				</h3>
+				<h3>
+					<img style="vertical-align: bottom; margin-right: 20px;"
+						height=80px; width=80px;
+						src=<c:out value="http://ddragon.leagueoflegends.com/cdn/7.10.1/img/champion/${champ.image.full}"/>><strong>${champ.name}</strong>,
+					${champ.title}
+				</h3>
+			</div>
+			<div class="col-md-4">
 				<br>
-				<h2>Tweet format:</h2>
-				<form>
-					<textarea class="form-control" id="tweetFormat"
-						style="font-size: 32px;" rows="3">$tournament$ $round$ is LIVE right now! Watch $players$ on twitch.tv/etsiimelee</textarea>
-				</form>
+				<h2>Tweet:</h2>
+				<div id="twitterDiv">
+				<form name="twitterForm">
+					<textarea class="form-control" id="twitterPost"
+						style="font-size: 32px;" rows="3" readonly>Playing ${champ.name} in a <c:choose><c:when test="${game.gameQueueConfigId == 420}">5v5 Solo Ranked</c:when><c:when test="${game.gameQueueConfigId == 0}">Custom game</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:otherwise>Ranked Solo</c:otherwise></c:choose> right now! Watch me at ${twitch.canal.url}</textarea>
+										</form><button style="margin-top:15px;vertical-align:bottom;margin-right:15px;" class="btn btn-primary" onclick="postTweet()">Tweet</button><label class="custom-control custom-checkbox">
+  <input name="checkTweet" id="checkTweet" type="checkbox" onclick="alertaChecked()" class="custom-control-input">
+  <span class="custom-control-indicator"></span>
+  <span class="custom-control-description">Tweet at game start</span>
+</label><a style="margin-left:15px;" id="tweetResult"></a></div>
 				<br>
 			</div>
-			<div class="col-md-4" style="background-color: lavender">
+			<div class="col-md-4" >
 				<br>
 				<h2>Twitch.tv stream name:</h2>
-				<textarea class="form-control" id="tweetFormat"
-					style="font-size: 32px;" rows="3">$tournament$ - $round$ - $playersScore$</textarea>
-				<br>
+				<textarea class="form-control" id="twitchPost"
+					style="font-size: 32px;" rows="3" readonly>${summoner.name} | Playing ${champ.name} in <c:choose><c:when test="${game.gameQueueConfigId == 420}">5v5 Solo Ranked</c:when><c:when test="${game.gameQueueConfigId == 0}">Custom game</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:when test="${game.gameQueueConfigId == 420}">Ranked Solo</c:when><c:otherwise>Ranked Solo</c:otherwise></c:choose></textarea>
+				<button style="margin-top:15px;vertical-align:bottom;margin-right:15px;" class="btn btn-primary" onclick="postTwitch()">Change Stream Title</button><label class="custom-control custom-checkbox">
+  <input name="checkTwitch" id="checkTwitch" type="checkbox" onclick="alertaChecked()" class="custom-control-input">
+  <span class="custom-control-indicator"></span>
+  <span class="custom-control-description">Change title at game start</span>
+</label><a style="margin-left:15px;" id="twitchResult"></a>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-4" style="background-color: LightGreen">
-				<h2>Log:</h2>
-				<textarea class="form-control" id="log" rows="13">18:00:34 Stream Set ID 007814 Started.
-																18:00:42 Stream name updated.
-																18:00:44 Tweeted.
-																18:02:31 Set ID 007815 Reported.
-																18:02:34 Challonge Updated.
-																18:16:11 Stream Set ID 007814 Ended.
-																18:16:13 Challonge Updated.</textarea>
-				<br>
+			<div class="col-md-4">
+				<img style="vertical-align: bottom;width:500px;" 
+					src=<c:out value="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champ.name}_0.jpg"/>>
 			</div>
-			<div class="col-md-4" style="background-color: LightPink">
-				<br>
-				<div class="row">
-					<div class="col-md-6" style="background-color: LightBlue">
-						<p style="font-size: 24px">
-							<strong>Tweet every:</strong>
-						</p>
-					</div>
-					<div class="col-md-6"
-						style="background-color: LightRed; margin-left: -50px">
-						<fieldset class="form-group" style="font-size: 24px">
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="optionsRadios"
-									id="optionsRadios1" value="option1" checked>Match
-								</label>
-							</div>
-							<div class="form-check">
-								<label class="form-check-label"> <input type="radio"
-									class="form-check-input" name="optionsRadios"
-									id="optionsRadios2" value="option2">Set
-								</label>
-							</div>
-							<form class="form-inline">
-								<div class="form-check inline disabled">
-									<label class="form-check-label"> <input type="radio"
-										class="form-check-input" name="optionsRadios"
-										id="optionsRadios3" value="option3" disabled>Minutes:
-									</label>
-								</div>
-								<div class="form-check inline">
-									<input class="form-control" type="number" value="5"
-										id="example-number-input">
-								</div>
-							</form>
-						</fieldset>
-					</div>
+			<div class="col-md-4">
+			<a class="twitter-timeline" data-width="500" data-height="400" href="https://twitter.com/${twitter.screenName}">Tweets by ${twitter.screenName}</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 				</div>
-				<div class="row">
-					<div class="col-md-4" style="background-color: lavender"></div>
-					<div class="col-md-4" style="background-color: lavenderBlush">
-					<br><br><br><br>
-						<h2>Live?</h2>
-						<div class="TriSea-technologies-Switch pull-left">
-                            <input id="TriSeaPrimary" name="TriSea1" type="checkbox"/>
-                            <label for="TriSeaPrimary" class="label-primary"></label>
-                        </div>
-					</div>
-					<div class="col-md-4" style="background-color: lavender"></div>
-				</div>
-			</div>
-			<div class="col-md-4" style="background-color: LightGreen">
+			<div class="col-md-4">
 				<br>
-				<iframe src="http://player.twitch.tv/?channel=yahooesports"
+				<iframe src="http://player.twitch.tv/?channel=${twitch.canal.name}"
 					height="290" width="508" frameborder="0" scrolling="no"
 					allowfullscreen="true"> </iframe>
 			</div>

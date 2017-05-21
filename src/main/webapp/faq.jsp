@@ -62,7 +62,7 @@
 				</div>
 				<div class="row">
 					<div id="p1" class="col-xs-6 col-lg-12">
-						<h2>What's the Smash.gg tournament URL?</h2>
+						<h2>I have a question!!</h2>
 						<p>Donec id elit non mi porta gravida at eget metus. Fusce
 							dapibus, tellus ac cursus commodo, tortor mauris condimentum
 							nibh, ut fermentum massa justo sit amet risus. Etiam porta sem
@@ -81,8 +81,7 @@
 
 			<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
 				<div class="list-group">
-					<a href="#p1" class="list-group-item active">What's the
-						Smash.gg tournament URL?</a> <a href="#" class="list-group-item">Link</a>
+					<a href="#p1" class="list-group-item active">I have a question!!</a> <a href="#" class="list-group-item">Link</a>
 					<a href="#" class="list-group-item">Link</a> <a href="#"
 						class="list-group-item">Link</a> <a href="#"
 						class="list-group-item">Link</a> <a href="#"
